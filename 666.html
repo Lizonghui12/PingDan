@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apple 风格静态首页</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --panel: rgba(255, 255, 255, 0.78);
+      --panel-solid: #ffffff;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(0, 0, 0, 0.08);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --accent: #0071e3;
+      --accent-dark: #0058b0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 113, 227, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(255, 45, 85, 0.08), transparent 22%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 18%, #efeff2 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: saturate(180%) blur(18px);
+      background: rgba(255, 255, 255, 0.72);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 22px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 12px;
+      color: #1d1d1f;
+    }
+
+    .nav .brand,
+    .nav .nav-link {
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav .brand:hover,
+    .nav .nav-link:hover {
+      opacity: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .icon-apple {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 18'%3E%3Cpath d='M11.11 9.7c-.02-2.14 1.75-3.16 1.83-3.21-1-1.46-2.55-1.66-3.1-1.68-1.32-.13-2.58.78-3.25.78-.67 0-1.71-.76-2.81-.74-1.45.02-2.79.84-3.54 2.14-1.51 2.62-.39 6.49 1.08 8.62.72 1.04 1.56 2.2 2.67 2.16 1.07-.04 1.48-.69 2.78-.69 1.31 0 1.68.69 2.8.67 1.16-.02 1.89-1.06 2.6-2.11.83-1.22 1.17-2.41 1.19-2.47-.03-.01-2.28-.87-2.24-3.47ZM9.01 3.45C9.61 2.72 10 1.71 9.89.7c-.86.04-1.9.58-2.52 1.31-.56.65-1.03 1.69-.9 2.68.96.07 1.94-.49 2.54-1.24Z'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 18'%3E%3Cpath d='M11.11 9.7c-.02-2.14 1.75-3.16 1.83-3.21-1-1.46-2.55-1.66-3.1-1.68-1.32-.13-2.58.78-3.25.78-.67 0-1.71-.76-2.81-.74-1.45.02-2.79.84-3.54 2.14-1.51 2.62-.39 6.49 1.08 8.62.72 1.04 1.56 2.2 2.67 2.16 1.07-.04 1.48-.69 2.78-.69 1.31 0 1.68.69 2.8.67 1.16-.02 1.89-1.06 2.6-2.11.83-1.22 1.17-2.41 1.19-2.47-.03-.01-2.28-.87-2.24-3.47ZM9.01 3.45C9.61 2.72 10 1.71 9.89.7c-.86.04-1.9.58-2.52 1.31-.56.65-1.03 1.69-.9 2.68.96.07 1.94-.49 2.54-1.24Z'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding-bottom: 60px;
+    }
+
+    .hero {
+      margin: 18px 16px 0;
+      border-radius: 40px;
+      min-height: 680px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0) 32%),
+        linear-gradient(135deg, #0f0f10 0%, #1c1c1e 35%, #2b2b2f 100%);
+      color: #f5f5f7;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(18px);
+      opacity: 0.8;
+    }
+
+    .hero::before {
+      width: 520px;
+      height: 520px;
+      right: -80px;
+      top: -120px;
+      background: radial-gradient(circle, rgba(0, 113, 227, 0.55) 0%, rgba(0, 113, 227, 0) 68%);
+    }
+
+    .hero::after {
+      width: 500px;
+      height: 500px;
+      left: -120px;
+      bottom: -180px;
+      background: radial-gradient(circle, rgba(255, 95, 58, 0.32) 0%, rgba(255, 95, 58, 0) 70%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      min-height: 680px;
+      gap: 24px;
+      padding: 78px 72px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(245, 245, 247, 0.88);
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(50px, 7vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      font-weight: 700;
+    }
+
+    .hero p {
+      margin: 22px 0 0;
+      max-width: 540px;
+      font-size: clamp(17px, 1.9vw, 22px);
+      line-height: 1.6;
+      color: rgba(245, 245, 247, 0.78);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 130px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: #f5f5f7;
+      color: #111;
+    }
+
+    .btn-primary:hover {
+      background: #ffffff;
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #f5f5f7;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+    }
+
+    .device {
+      position: relative;
+      width: min(430px, 100%);
+      aspect-ratio: 1 / 1.03;
+      border-radius: 42px;
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, #3b3b3f 0%, #111113 100%);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transform: perspective(1200px) rotateY(-16deg) rotateX(8deg);
+    }
+
+    .device::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(0, 113, 227, 0.85), rgba(0, 113, 227, 0) 34%),
+        radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0) 20%),
+        radial-gradient(circle at 78% 82%, rgba(255, 45, 85, 0.75), rgba(255, 45, 85, 0) 24%),
+        linear-gradient(145deg, #101014 0%, #1b1b20 48%, #09090b 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .device::after {
+      content: "";
+      position: absolute;
+      inset: 32px;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 35%),
+        linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.04) 100%);
+      backdrop-filter: blur(2px);
+    }
+
+    .device-badge {
+      position: absolute;
+      left: 28px;
+      bottom: 28px;
+      z-index: 2;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px);
+    }
+
+    .section {
+      margin: 18px 16px 0;
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 34px;
+      background: var(--panel-solid);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      padding: 50px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: clamp(34px, 4.4vw, 60px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .card p {
+      margin: 14px 0 0;
+      max-width: 380px;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .card-links {
+      margin-top: 18px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    .card-links a:hover {
+      text-decoration: underline;
+    }
+
+    .tile-iphone {
+      background:
+        radial-gradient(circle at 50% 22%, rgba(20, 20, 25, 0.08), rgba(20, 20, 25, 0) 38%),
+        linear-gradient(180deg, #fbfbfd 0%, #eef0f5 100%);
+    }
+
+    .tile-iphone::after {
+      content: "";
+      position: absolute;
+      right: -6%;
+      bottom: -8%;
+      width: 56%;
+      height: 86%;
+      border-radius: 42px;
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.18)),
+        linear-gradient(180deg, #1f1f23 0%, #070709 100%);
+      transform: rotate(10deg);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .tile-iphone::before {
+      content: "";
+      position: absolute;
+      right: 11%;
+      bottom: 10%;
+      width: 28%;
+      height: 45%;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(0, 113, 227, 0.92), rgba(0, 113, 227, 0) 28%),
+        radial-gradient(circle at 70% 70%, rgba(255, 45, 85, 0.88), rgba(255, 45, 85, 0) 34%),
+        radial-gradient(circle at 45% 55%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 45%);
+      filter: blur(6px);
+      opacity: 0.9;
+      transform: rotate(-8deg);
+      z-index: 1;
+    }
+
+    .tile-mac {
+      color: #f5f5f7;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 30%),
+        linear-gradient(180deg, #111111 0%, #17171a 100%);
+    }
+
+    .tile-mac::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      bottom: -2%;
+      width: 84%;
+      height: 58%;
+      border-radius: 32px 32px 18px 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
+        linear-gradient(145deg, #101114 0%, #1a1b1e 56%, #09090a 100%);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
+      transform: perspective(1000px) rotateX(15deg);
+    }
+
+    .tile-mac::after {
+      content: "";
+      position: absolute;
+      left: 20%;
+      top: 36%;
+      width: 46%;
+      height: 22%;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(0, 113, 227, 0.9), rgba(0, 113, 227, 0) 40%),
+        linear-gradient(45deg, rgba(255, 45, 85, 0.9), rgba(255, 45, 85, 0) 44%);
+      filter: blur(3px);
+      opacity: 0.9;
+    }
+
+    .tile-watch {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0) 28%),
+        linear-gradient(180deg, #f8f8fb 0%, #ebedf2 100%);
+    }
+
+    .tile-watch::before {
+      content: "";
+      position: absolute;
+      left: 15%;
+      top: 12%;
+      width: 18%;
+      height: 76%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #101014 0%, #27272b 52%, #101014 100%);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+      transform: rotate(12deg);
+    }
+
+    .tile-watch::after {
+      content: "";
+      position: absolute;
+      left: 34%;
+      top: 28%;
+      width: 30%;
+      aspect-ratio: 1;
+      border-radius: 40px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(0, 113, 227, 0.95), rgba(0, 113, 227, 0) 40%),
+        radial-gradient(circle at 68% 68%, rgba(255, 45, 85, 0.82), rgba(255, 45, 85, 0) 26%),
+        linear-gradient(145deg, #16161a 0%, #09090b 100%);
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .tile-accessory {
+      background:
+        radial-gradient(circle at 20% 14%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 24%),
+        linear-gradient(180deg, #fafafa 0%, #eceef3 100%);
+    }
+
+    .tile-accessory::before {
+      content: "";
+      position: absolute;
+      right: 8%;
+      top: 16%;
+      width: 42%;
+      height: 58%;
+      border-radius: 40px;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(0, 113, 227, 0.85), rgba(0, 113, 227, 0) 26%),
+        radial-gradient(circle at 38% 68%, rgba(255, 45, 85, 0.82), rgba(255, 45, 85, 0) 24%),
+        linear-gradient(145deg, #101014 0%, #232328 100%);
+      filter: blur(1px);
+      transform: rotate(-12deg);
+    }
+
+    .tile-accessory::after {
+      content: "";
+      position: absolute;
+      left: 9%;
+      bottom: 10%;
+      width: 38%;
+      height: 36%;
+      border-radius: 32px;
+      background: linear-gradient(145deg, #1a1a1f 0%, #050507 100%);
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.14);
+      transform: rotate(7deg);
+    }
+
+    .low-row {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .promo {
+      min-height: 360px;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      padding: 36px 40px;
+      background: var(--panel-solid);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .promo h3 {
+      margin: 0;
+      font-size: clamp(30px, 3vw, 46px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .promo p {
+      margin: 12px 0 0;
+      max-width: 340px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .promo .mini-links {
+      margin-top: 18px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    .promo .mini-links a:hover {
+      text-decoration: underline;
+    }
+
+    .promo-vision {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 26%),
+        linear-gradient(135deg, #0d0d0f 0%, #1e1e23 100%);
+      color: #f5f5f7;
+    }
+
+    .promo-vision p {
+      color: rgba(245, 245, 247, 0.76);
+    }
+
+    .promo-vision::before {
+      content: "";
+      position: absolute;
+      right: -8%;
+      bottom: -14%;
+      width: 52%;
+      height: 80%;
+      border-radius: 999px 999px 64px 64px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, #121216 0%, #09090b 100%);
+      transform: rotate(-8deg);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .promo-vision::after {
+      content: "";
+      position: absolute;
+      right: 12%;
+      bottom: 18%;
+      width: 24%;
+      height: 30%;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(0, 113, 227, 0.95), rgba(0, 113, 227, 0) 32%),
+        radial-gradient(circle at 35% 35%, rgba(255, 45, 85, 0.85), rgba(255, 45, 85, 0) 22%),
+        linear-gradient(145deg, #111114 0%, #050507 100%);
+      filter: blur(2px);
+      transform: rotate(8deg);
+    }
+
+    .promo-air {
+      background:
+        radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 18%),
+        linear-gradient(180deg, #f7f7fa 0%, #e9edf4 100%);
+    }
+
+    .promo-air::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 22%;
+      width: 38%;
+      height: 48%;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(0, 113, 227, 0.88), rgba(0, 113, 227, 0) 28%),
+        radial-gradient(circle at 65% 65%, rgba(255, 45, 85, 0.76), rgba(255, 45, 85, 0) 22%),
+        linear-gradient(145deg, #fefefe 0%, #d6dae4 100%);
+      transform: translateX(-50%) rotate(-18deg);
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.14);
+    }
+
+    .promo-air::after {
+      content: "";
+      position: absolute;
+      left: 14%;
+      bottom: 12%;
+      width: 30%;
+      height: 18%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.65);
+      filter: blur(12px);
+    }
+
+    .footer {
+      max-width: 1440px;
+      margin: 28px auto 0;
+      padding: 24px 22px 50px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .footer-panel {
+      padding-top: 18px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .footer-links strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .footer-links a {
+      display: block;
+      margin: 6px 0;
+      color: var(--muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-note {
+      max-width: 560px;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 56px 28px;
+      }
+
+      .hero-visual {
+        min-height: 400px;
+      }
+
+      .grid-two,
+      .low-row,
+      .footer-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        height: auto;
+        padding: 12px 16px;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        gap: 12px 16px;
+        justify-content: flex-start;
+      }
+
+      .hero,
+      .card,
+      .promo {
+        border-radius: 26px;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-inner {
+        padding: 42px 22px 26px;
+        min-height: auto;
+      }
+
+      .hero h1 {
+        font-size: clamp(40px, 13vw, 64px);
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .card-inner {
+        padding: 34px 24px;
+      }
+
+      .card {
+        min-height: 440px;
+      }
+
+      .promo {
+        min-height: 300px;
+        padding: 28px 22px;
+      }
+
+      .footer-links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="#" aria-label="Apple 首页">
+        <span class="icon-apple" aria-hidden="true"></span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="#iphone">iPhone</a>
+        <a class="nav-link" href="#mac">Mac</a>
+        <a class="nav-link" href="#watch">Watch</a>
+        <a class="nav-link" href="#airpods">AirPods</a>
+        <a class="nav-link" href="#vision">Vision</a>
+        <a class="nav-link" href="#support">支持</a>
+      </div>
+      <a class="nav-link" href="#">搜索</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero" id="iphone">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Apple 官方风格静态页</div>
+          <h1>iPhone 16 Pro</h1>
+          <p>
+            极简、克制、充满力量感的首页气质。我们用纯 HTML 和 CSS 还原了苹果官网常见的
+            视觉层级、留白节奏和产品展示方式。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#mac">了解更多</a>
+            <a class="btn btn-secondary" href="#support">购买</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="device">
+            <div class="device-badge">A18 Pro · 48MP · Titanium</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section grid-two">
+      <article class="card tile-iphone" id="mac">
+        <div class="card-inner">
+          <div>
+            <h2>MacBook Air</h2>
+            <p>轻薄与性能并存，适合做演示、学习和日常工作。静态页面用同样的简洁逻辑呈现。</p>
+            <div class="card-links">
+              <a href="#">进一步了解</a>
+              <a href="#">选购</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card tile-watch" id="watch">
+        <div class="card-inner">
+          <div>
+            <h2>Apple Watch</h2>
+            <p>健康、运动和通知中心都集中在一块屏幕里，页面里也保持一种精致的秩序感。</p>
+            <div class="card-links">
+              <a href="#">查看系列</a>
+              <a href="#">比较机型</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section low-row">
+      <article class="promo promo-vision" id="vision">
+        <h3>Vision Pro</h3>
+        <p>
+          通过背景光效、渐变和阴影模拟苹果官网那种空间感，适合做首页下半部分的主打内容区。
+        </p>
+        <div class="mini-links">
+          <a href="#">了解更多</a>
+          <a href="#">观看影片</a>
+        </div>
+      </article>
+
+      <article class="promo promo-air" id="airpods">
+        <h3>AirPods Pro</h3>
+        <p>
+          白底、浅灰和圆润图形是苹果式产品卡片的关键元素，这里保留了那种干净又高级的感觉。
+        </p>
+        <div class="mini-links">
+          <a href="#">购买</a>
+          <a href="#">查看详情</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer" id="support">
+    <div class="footer-panel">
+      <div class="footer-note">
+        <p>
+          这是一个纯静态的 Apple 风格页面，没有依赖图片素材和脚本，适合直接打开预览。
+          如果你愿意，我还可以继续帮你把它改得更像苹果官网首页，或者拆成 `index.html` / `style.css`
+          两个文件版本。
+        </p>
+      </div>
+      <div class="footer-links" aria-label="页脚链接">
+        <div>
+          <strong>商店</strong>
+          <a href="#">Mac</a>
+          <a href="#">iPhone</a>
+          <a href="#">Watch</a>
+        </div>
+        <div>
+          <strong>服务</strong>
+          <a href="#">Apple Music</a>
+          <a href="#">iCloud</a>
+          <a href="#">Apple Care</a>
+        </div>
+        <div>
+          <strong>关于</strong>
+          <a href="#">新闻</a>
+          <a href="#">隐私</a>
+          <a href="#">联系</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
